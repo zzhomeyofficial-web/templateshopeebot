@@ -19,7 +19,12 @@ from telegram.ext import ApplicationBuilder, MessageHandler, ContextTypes, filte
 # ==============================
 # KONFIGURASI
 # ==============================
-TOKEN = "8425712007:AAHq49akTNUDSqRq3jaM_5Z52CCsNtoccaI"
+# TOKEN sekarang diambil dari Environment Variable agar aman saat upload ke GitHub
+TOKEN = os.getenv("TOKEN")
+
+if not TOKEN:
+    raise ValueError("TOKEN tidak ditemukan. Set environment variable TOKEN terlebih dahulu.")
+
 MASTER_FILE = "master.xlsx"
 LOG_FILE = "usage_log.xlsx"
 
@@ -135,7 +140,7 @@ async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
     doc = update.message.document
 
     if not doc.file_name.endswith(".xlsx"):
-        await update.message.reply_text("❌ Bukan File Template Shopee. Kirim file Excel Template Shopee (.xlsx)")
+        await update.message.reply_text("❌ Kirim file Excel (.xlsx)")
         return
 
     caption_text = update.message.caption or ""
@@ -227,7 +232,7 @@ async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 document=f,
                 caption=(
                     f"Template sudah di sesuaikan dengan akun shopeemu menggunakan harga {price_column.upper()}. "
-                    "Silahkan download file ini dan upload ke shopee. Jika Masih Gagal silahkan hubungi admin Harry @izauharry atau 087732735037"
+                    "Silahkan download file ini dan upload ke shopee."
                 ),
             )
 
@@ -244,7 +249,7 @@ Silakan lakukan langkah berikut:
 1️⃣ Buka file di Microsoft Excel
 2️⃣ Klik tombol 'Enable Editing'
 3️⃣ Klik Save / Simpan
-4️⃣ Kirim ulang file tersebut ke sini
+4️⃣ Kirim ulang file tersebut ke bot
 
 Setelah disimpan ulang, file akan bisa diproses.
 """
